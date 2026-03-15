@@ -3,7 +3,6 @@ namespace TaskManagerAPI.Models
 {
     public class TaskItem
     {
-        
       public int Id { get; set; }
 
       public DateTime? EndDate {get; set;}
@@ -36,22 +35,6 @@ namespace TaskManagerAPI.Models
       public User AssignedToUser {get ; set;}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
 
 }
