@@ -1,5 +1,5 @@
 
-namespace TASKMANAGERAPI.Models{
+namespace TaskManagerAPI.Models{
 public class Organization
 {
     public int Id { get; set; }
