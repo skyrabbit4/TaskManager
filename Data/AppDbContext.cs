@@ -69,6 +69,9 @@ namespace TaskManagerAPI.Data
                 entity.Property(e=>e.EndDate).HasColumnName("end_date");
                 entity.Property(e=>e.Status).HasColumnName("status");
                 entity.Property(e=>e.CreatedBy).HasColumnName("created_by");
+                entity.HasOne(e => e.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(e => e.CreatedBy);
             });
 
              modelBuilder.Entity<TaskItem>(entity =>
@@ -87,6 +90,13 @@ namespace TaskManagerAPI.Data
                 entity.Property(e=>e.EffortHours).HasColumnName("effort_hours");
                 entity.Property(e=>e.CreatedBy).HasColumnName("created_by");
                 entity.Property(e=>e.AssignedTo).HasColumnName("assigned_to");
+                entity.HasOne(e => e.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(e => e.CreatedBy);
+
+                entity.HasOne(e => e.AssignedToUser)
+                .WithMany()
+                .HasForeignKey(e => e.AssignedTo);
 
             });
 
@@ -111,6 +121,9 @@ namespace TaskManagerAPI.Data
                 entity.Property(e=>e.ChangedAt).HasColumnName("changed_at");
                 entity.Property(e=>e.ChangedBy).HasColumnName("changed_by");
                 entity.Property(e=>e.TaskId).HasColumnName("task_id");
+                entity.HasOne(e => e.ChangedByUser)
+                .WithMany()
+                .HasForeignKey(e => e.ChangedBy);
 
 
             });
