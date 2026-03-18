@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Controllers
 {
@@ -32,6 +33,14 @@ namespace TaskManagerAPI.Controllers
                 }
             return Ok(result);
         }
+        [HttpPost]
+        public async Task<IActionResult>CreateOrganization([FromBody] Organization organization)    
+        {
+            await _context.Organizations.AddAsync(organization);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new { id = organization.Id }, organization);
+        }
+
 
 
         
