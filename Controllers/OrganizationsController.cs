@@ -41,6 +41,34 @@ namespace TaskManagerAPI.Controllers
             return CreatedAtAction(nameof(GetById), new { id = organization.Id }, organization);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult>UpdateOrganization(int id,[FromBody] Organization organization)
+        {
+            var result=await _context.Organizations.FindAsync(id);
+            if(result==null)
+            {
+                return NotFound();
+            }
+            result.Name=organization.Name;
+            result.Description=organization.Description;
+            await _context.SaveChangesAsync();
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult>DeleteOrganization(int id)
+        {
+            var result=await _context.Organizations.FindAsync(id);
+            if(result==null)
+            {
+                return NotFound();
+            }
+             _context.Organizations.Remove(result);
+             await _context.SaveChangesAsync();
+            return NoContent();
+        }
+   
+
 
 
         
