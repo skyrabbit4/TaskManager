@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.DTOs;
 using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Controllers
@@ -36,24 +37,29 @@ namespace TaskManagerAPI.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTeams([FromBody] Team team)
+    public async Task<IActionResult> CreateTeams([FromBody] CreateTeamDto dto)
     {
+        var team=new Team
+        {
+            Name=dto.Name,
+            Description=dto.Description,
+            OrganizationId=dto.OrganizationId
+        };
         await _context.Teams.AddAsync(team);
         await _context.SaveChangesAsync();
         return CreatedAtAction(nameof(GetTeamById),new{id=team.Id},team);
-            
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult>UpdateTeams(int id ,[FromBody] Team team)
+    public async Task<IActionResult>UpdateTeams(int id ,[FromBody] UpdateTeamsDto dto)
         {
             var result=await _context.Teams.FindAsync(id);
             if (result == null)
             {
                 return NotFound();
             }
-            result.Description=team.Description;
-            result.Name=team.Name;
+            result.Description=dto.Description;
+            result.Name=dto.Name;
             await _context.SaveChangesAsync();
             return Ok(result);
         }

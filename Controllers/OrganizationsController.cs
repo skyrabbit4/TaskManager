@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.DTOs;
 using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Controllers
@@ -34,23 +35,28 @@ namespace TaskManagerAPI.Controllers
             return Ok(result);
         }
         [HttpPost]
-        public async Task<IActionResult>CreateOrganization([FromBody] Organization organization)    
+        public async Task<IActionResult>CreateOrganization([FromBody] CreateOrganizationDto dto)    
         {
+            var organization=new Organization
+            {
+                Name=dto.Name,
+                Description=dto.Description
+            };
             await _context.Organizations.AddAsync(organization);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = organization.Id }, organization);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult>UpdateOrganization(int id,[FromBody] Organization organization)
+        public async Task<IActionResult>UpdateOrganization(int id,[FromBody] UpdateOrganizationDto dto)
         {
             var result=await _context.Organizations.FindAsync(id);
             if(result==null)
             {
                 return NotFound();
             }
-            result.Name=organization.Name;
-            result.Description=organization.Description;
+            result.Name=dto.Name;
+            result.Description=dto.Description;
             await _context.SaveChangesAsync();
             return Ok(result);
         }
