@@ -24,15 +24,15 @@ namespace TaskManagerAPI.Models
       public int? EffortHours { get; set; }
 
       public int ProjectId {get; set;}
-      public Project Project {get;set;}
+      public Project? Project {get;set;}
 
       public int CreatedBy {get; set;}
 
-      public User CreatedByUser {get; set;}
+      public User? CreatedByUser {get; set;}
 
       public int AssignedTo {get ; set;}
 
-      public User AssignedToUser {get ; set;}
+      public User? AssignedToUser {get ; set;}
 
 
     }

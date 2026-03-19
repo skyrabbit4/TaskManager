@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Controllers
 
@@ -22,6 +23,53 @@ namespace TaskManagerAPI.Controllers
         var result=await _context.Teams.Include(t=>t.Organization).ToListAsync();
         return Ok(result);
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTeamById(int id)
+    {
+        var result=await _context.Teams.Include(t=>t.Organization).FirstOrDefaultAsync(t=>t.Id==id);
+        if(result==null)
+        {
+            return NotFound();
+        }
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateTeams([FromBody] Team team)
+    {
+        await _context.Teams.AddAsync(team);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetTeamById),new{id=team.Id},team);
+            
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult>UpdateTeams(int id ,[FromBody] Team team)
+        {
+            var result=await _context.Teams.FindAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            result.Description=team.Description;
+            result.Name=team.Name;
+            await _context.SaveChangesAsync();
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTeam(int id)
+        {
+           var result=await _context.Teams.FindAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            _context.Teams.Remove(result);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
 
 

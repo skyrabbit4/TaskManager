@@ -20,11 +20,11 @@ namespace TaskManagerAPI.Models
 
        public int TeamId {get; set;}
 
-       public Team Team {get; set;}
+       public Team? Team {get; set;}
 
        public int CreatedBy { get; set;}
 
-       public User CreatedByUser {get; set;}
+       public User? CreatedByUser {get; set;}
 
     }
 
