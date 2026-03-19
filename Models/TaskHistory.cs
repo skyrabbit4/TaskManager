@@ -19,11 +19,11 @@ namespace TaskManagerAPI.Models
 
         public int ChangedBy {get; set;}
 
-        public User ChangedByUser {get; set;}
+        public User? ChangedByUser {get; set;}
          
          public int TaskId {get; set;}
 
-         public TaskItem TaskItem {get; set;}
+         public TaskItem? TaskItem {get; set;}
 }
 
         
