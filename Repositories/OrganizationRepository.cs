@@ -40,6 +40,32 @@ namespace TaskManagerAPI.Repositories
             return org;
         }
 
+        public async Task<Organization?>UpdateAsync(int id, Organization organization)
+        {
+            var result= await _context.Organizations.FindAsync(id);
+
+            if(result==null)
+            {
+                 return null;
+            }
+            result.Name=organization.Name;
+            result.Description=organization.Description;
+            await _context.SaveChangesAsync();
+            return result;
+        }
+
+        public async Task<bool>DeleteOrganization(int id)
+        {
+            var result = await _context.Organizations.FindAsync(id);
+            if(result==null)
+            {
+                return false;
+            }
+            _context.Organizations.Remove(result);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
 
 
 
