@@ -7,7 +7,7 @@ namespace TaskManagerAPI.Interfaces
     {
         Task<List<Organization>>GetAllAsync();
 
-        Task<Organization>GetByIdAsync(int id);
+        Task<Organization?>GetByIdAsync(int id);
 
         Task<Organization>CreateAsync(Organization organization);
 

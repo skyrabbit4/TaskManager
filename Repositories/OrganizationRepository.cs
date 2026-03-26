@@ -1,4 +1,6 @@
 
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Interfaces;
@@ -21,9 +23,21 @@ namespace TaskManagerAPI.Repositories
             return await _context.Organizations.ToListAsync();
         }
 
-        public async Task<Organization>GetByIdAsync(int id)
+        public async Task<Organization?>GetByIdAsync(int id)
         {
             return await _context.Organizations.FindAsync(id);
+        }
+
+        public async Task<Organization>CreateAsync(Organization organization)
+        {
+             var org=new Organization
+            {
+                Name=organization.Name,
+                Description=organization.Description
+            };
+            await _context.Organizations.AddAsync(org);
+            await _context.SaveChangesAsync();
+            return org;
         }
 
 
