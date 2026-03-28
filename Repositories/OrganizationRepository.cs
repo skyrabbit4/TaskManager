@@ -30,14 +30,10 @@ namespace TaskManagerAPI.Repositories
 
         public async Task<Organization>CreateAsync(Organization organization)
         {
-             var org=new Organization
-            {
-                Name=organization.Name,
-                Description=organization.Description
-            };
-            await _context.Organizations.AddAsync(org);
+            
+            await _context.Organizations.AddAsync(organization);
             await _context.SaveChangesAsync();
-            return org;
+            return organization;
         }
 
         public async Task<Organization?>UpdateAsync(int id, Organization organization)

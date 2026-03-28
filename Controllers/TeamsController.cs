@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.DTOs;
+using TaskManagerAPI.Interfaces;
 using TaskManagerAPI.Models;
+using TaskManagerAPI.Repositories;
 
 namespace TaskManagerAPI.Controllers
 
@@ -12,23 +14,23 @@ namespace TaskManagerAPI.Controllers
 
     public class TeamsController:ControllerBase
     {
-    private readonly AppDbContext _context;
-    public TeamsController(AppDbContext context)
+    private readonly ITeamRepository _repository;
+    public TeamsController(ITeamRepository repository)
     {
-        _context=context;
+        _repository=repository;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetTeams()
     {
-        var result=await _context.Teams.Include(t=>t.Organization).ToListAsync();
+        var result=await _repository.GetTeamAsync();
         return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTeamById(int id)
     {
-        var result=await _context.Teams.Include(t=>t.Organization).FirstOrDefaultAsync(t=>t.Id==id);
+        var result=await _repository.GetTeamByIdAsync(id);
         if(result==null)
         {
             return NotFound();
@@ -45,37 +47,44 @@ namespace TaskManagerAPI.Controllers
             Description=dto.Description,
             OrganizationId=dto.OrganizationId
         };
-        await _context.Teams.AddAsync(team);
-        await _context.SaveChangesAsync();
+        await _repository.CreateTeamAsync(team);
         return CreatedAtAction(nameof(GetTeamById),new{id=team.Id},team);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult>UpdateTeams(int id ,[FromBody] UpdateTeamsDto dto)
         {
-            var result=await _context.Teams.FindAsync(id);
-            if (result == null)
+            var team =new Team
+            {
+                Name=dto.Name,
+                Description=dto.Description
+            };
+
+           var result= await _repository.UpdateTeamAsync(id,team);
+            if (result==null)
             {
                 return NotFound();
             }
-            result.Description=dto.Description;
-            result.Name=dto.Name;
-            await _context.SaveChangesAsync();
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTeam(int id)
+      [HttpDelete("{id}")]
+public async Task<IActionResult> DeleteTeam(int id)
+{
+    try
+    {
+        var result = await _repository.DeleteTeamAsync(id);
+        if (!result)
         {
-           var result=await _context.Teams.FindAsync(id);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            _context.Teams.Remove(result);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            return NotFound();
         }
+        return NoContent();
+    }
+    catch (InvalidOperationException ex)
+    {
+        return BadRequest(new { message = ex.Message });
+    }
+}
 
 
 

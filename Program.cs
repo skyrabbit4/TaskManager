@@ -20,6 +20,7 @@ options.UseMySql(
 ));
 
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+builder.Services.AddScoped<ITeamRepository,TeamRepository>();
 
 var app = builder.Build();
 
@@ -30,7 +31,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled for local development
 app.MapControllers();
 
 
