@@ -12,23 +12,25 @@ namespace TaskManagerAPI.Controllers
     [Route("api/[controller]")]
     public class OrganizationsController : ControllerBase
     {
-        private readonly IOrganizationRepository _repository;
-        public OrganizationsController(IOrganizationRepository repository)
+        private readonly AppDbContext _context;
+        private readonly IOrganizationRepository organization;
+        public OrganizationsController(AppDbContext context, IOrganizationRepository organization)
         {
-          _repository=repository;
+            _context=context;
+            this.organization=organization;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var organizations =await _repository.GetAllAsync();
+            var organizations =await organization.GetAllAsync();
             return Ok(organizations);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult>GetById(int id)
         {
-           var result= await _repository.GetByIdAsync(id);
+           var result= await organization.GetByIdAsync(id);
             if (result == null)
                 {
                     return NotFound();
@@ -38,20 +40,15 @@ namespace TaskManagerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult>CreateOrganization([FromBody] CreateOrganizationDto dto)    
         {
-            var org=new Organization
-            {
-                Name=dto.Name,
-                Description=dto.Description
-            };
-            var result=await _repository.CreateAsync(org);
+            var result=await organization.CreateAsync(dto);
             
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(GetById), new { id = organization.Id }, organization);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult>UpdateOrganization(int id,[FromBody] UpdateOrganizationDto dto)
         {
-            var result=await _repository.UpdateAsync(id);
+            var result=await organization.UpdateAsync(id);
             if(result==null)
             {
                 return NotFound();
@@ -65,7 +62,7 @@ namespace TaskManagerAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult>DeleteOrganization(int id)
         {
-            var result=await _repository.FindAsync(id);
+            var result=await _context.Organizations.FindAsync(id);
             if(result==null)
             {
                 return NotFound();
