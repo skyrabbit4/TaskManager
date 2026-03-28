@@ -12,11 +12,10 @@ namespace TaskManagerAPI.Controllers
     [Route("api/[controller]")]
     public class OrganizationsController : ControllerBase
     {
-        private readonly AppDbContext _context;
         private readonly IOrganizationRepository organization;
-        public OrganizationsController(AppDbContext context, IOrganizationRepository organization)
+        public OrganizationsController( IOrganizationRepository organization)
         {
-            _context=context;
+           
             this.organization=organization;
         }
 
