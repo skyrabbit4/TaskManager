@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Components.RenderTree;
 using TaskManagerAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using TaskManagerAPI.Interfaces;
+using TaskManagerAPI.Models;
+using TaskManagerAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,8 @@ options.UseMySql(
     builder.Configuration.GetConnectionString("DefaultConnection"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
 ));
+
+builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 
 var app = builder.Build();
 

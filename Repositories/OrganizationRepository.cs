@@ -54,7 +54,7 @@ namespace TaskManagerAPI.Repositories
             return result;
         }
 
-        public async Task<bool>DeleteOrganization(int id)
+        public async Task<bool>DeleteAsync(int id)
         {
             var result = await _context.Organizations.FindAsync(id);
             if(result==null)

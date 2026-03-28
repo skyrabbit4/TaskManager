@@ -51,27 +51,28 @@ namespace TaskManagerAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult>UpdateOrganization(int id,[FromBody] UpdateOrganizationDto dto)
         {
-            var result=await _repository.UpdateAsync(id);
+
+            var org=new Organization
+            {
+                Name=dto.Name,
+                Description=dto.Description
+            };
+            var result=await _repository.UpdateAsync(id,org);
             if(result==null)
             {
                 return NotFound();
             }
-            result.Name=dto.Name;
-            result.Description=dto.Description;
-            await _context.SaveChangesAsync();
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult>DeleteOrganization(int id)
         {
-            var result=await _repository.FindAsync(id);
-            if(result==null)
+            var result=await _repository.DeleteAsync(id);
+            if(!result)
             {
                 return NotFound();
             }
-             _context.Organizations.Remove(result);
-             await _context.SaveChangesAsync();
             return NoContent();
         }
    

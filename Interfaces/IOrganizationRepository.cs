@@ -13,7 +13,7 @@ namespace TaskManagerAPI.Interfaces
 
         Task<Organization?>UpdateAsync(int id, Organization organization);
         
-        Task<bool>DeleteOrganization(int id);
+        Task<bool>DeleteAsync(int id);
 
     }
 }
