@@ -69,22 +69,22 @@ namespace TaskManagerAPI.Controllers
         }
 
       [HttpDelete("{id}")]
-public async Task<IActionResult> DeleteTeam(int id)
-{
-    try
+    public async Task<IActionResult> DeleteTeam(int id)
     {
-        var result = await _repository.DeleteTeamAsync(id);
-        if (!result)
+        try
         {
-            return NotFound();
+            var result = await _repository.DeleteTeamAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
-        return NoContent();
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
-    catch (InvalidOperationException ex)
-    {
-        return BadRequest(new { message = ex.Message });
-    }
-}
 
 
 

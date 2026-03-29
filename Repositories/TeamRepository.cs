@@ -15,7 +15,6 @@ namespace TaskManagerAPI.Repositories
           _context=context;
         }
 
-
         public async Task<List<Team>> GetTeamAsync()
         {
             var result= await _context.Teams.Include(t=>t.Organization).ToListAsync();
@@ -58,18 +57,14 @@ namespace TaskManagerAPI.Repositories
             }
 
             var hasProjects = await _context.Projects.AnyAsync(p => p.TeamId == id);
-    if (hasProjects)
-    {
-        throw new InvalidOperationException("Cannot delete team with existing projects");
-    }
+            if (hasProjects)
+            {
+                throw new InvalidOperationException("Cannot delete team with existing projects");
+            }
 
-    _context.Teams.Remove(result);
-    await _context.SaveChangesAsync();
-    return true;
-
-        }
-
-
-
+            _context.Teams.Remove(result);
+            await _context.SaveChangesAsync();
+            return true;
+            }
     }
 }
