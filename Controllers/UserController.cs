@@ -50,6 +50,35 @@ namespace TaskManagerAPI.Controllers
             return CreatedAtAction(nameof(GetByIdAsync),new{id=us.Id},us);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult>UpdateAsync(int id,[FromBody] UpdateUserDto dto)
+        {
+            var us=new User
+            {
+                Name=dto.Name,
+                Role=dto.Role,
+                ProfilePicture=dto.ProfilePicture,
+                Position=dto.Position
+            };
+
+            var result= await _repository.UpdateAsync(id,us);
+            if(result==null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var result = await _repository.DeleteAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
 
     }
 }

@@ -21,6 +21,7 @@ options.UseMySql(
 
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<ITeamRepository,TeamRepository>();
+builder.Services.AddScoped<IUserRepository,UserRepository>();
 
 var app = builder.Build();
 
