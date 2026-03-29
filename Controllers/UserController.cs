@@ -26,28 +26,29 @@ namespace TaskManagerAPI.Controllers
             return result;
         }
 
-        [HttpGet("{id}")]
-        public async Task<User?>GetByIdAsync(int id)
+       [HttpGet("{id}", Name = "GetUserById")]
+        public async Task<ActionResult<User?>> GetByIdAsync(int id)
         {
-            var result =await _repository.GetByIdAsync(id);
-            return result;
+            var result = await _repository.GetByIdAsync(id);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult>CreateAsync([FromBody] CreateUserDto dto)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateUserDto dto)
         {
-            var us=new User
+            var us = new User
             {
-                Name=dto.Name,
-                Email=dto.Email,
-                Role=dto.Role,
-                ProfilePicture=dto.ProfilePicture,
-                Position=dto.Position,
-                TeamId=dto.TeamId
+                Name = dto.Name,
+                Email = dto.Email,
+                Role = dto.Role,
+                ProfilePicture = dto.ProfilePicture,
+                Position = dto.Position,
+                TeamId = dto.TeamId
             };
 
-            var result= await _repository.CreateAsync(us);
-            return CreatedAtAction(nameof(GetByIdAsync),new{id=us.Id},us);
+            var result = await _repository.CreateAsync(us);
+
+            return CreatedAtRoute("GetUserById", new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
